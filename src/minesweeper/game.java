@@ -10,7 +10,7 @@ import java.awt.event.*;
 public class game extends JFrame {
     
     public game(int size) {
-        noOfMines = size;
+        noOfMines = (size*3)/2;
         this.setSize(size*30, size*30 + 50);
         this.setTitle("Minesweeper");
         setLocationRelativeTo(null);
@@ -60,14 +60,6 @@ public class game extends JFrame {
                 }
             }
         }
-        
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                    System.out.print(mineLand[i][j] + "  ");
-            }
-            System.out.println("\n");
-        }
-
     }
     
     public void main(game frame, int size) {
@@ -140,35 +132,31 @@ public class game extends JFrame {
                 revealed[i][j] = false;
             }
         }
-
-        // setters and getters
     }
     
     public void changeSmile() {
         
     }
     
-    public void buttonClicked(String coordinate) {
-        int x, y;
-        String[] xy = coordinate.split(" ", 2);
-        x = Integer.parseInt(xy[0]);
-        y = Integer.parseInt(xy[1]);
+    public void buttonClicked(int x, int y) {
         if(!revealed[x][y]) {
             revealed[x][y] = true;
             
             switch (mineLand[x][y]) {
                 case -1:
                     buttons[x][y].setText("X");
+                    buttons[x][y].setSelected(false);
                     buttons[x][y].setBackground(Color.RED);
                     JOptionPane.showMessageDialog(rootPane, "Game Over !");
+                    System.exit(0);
                     break;
                 case 0:
-                    buttons[x][y].setText("0");
-                    buttons[x][y].setBackground(Color.BLUE);
+                    buttons[x][y].setSelected(false);
+                    buttons[x][y].setBackground(Color.lightGray);
                     for (int i = -1; i <= 1; i++) {
                         for (int j = -1; j <= 1; j++) {
                             try {
-                                buttonClicked(x + i + " " + y + j);  // Recurse around
+                                buttonClicked(x + i, y + j);  // Recurse around
                             }
                             catch (Exception e) {
                                 // Do nothing
@@ -178,7 +166,7 @@ public class game extends JFrame {
                     break;
                 default:
                     buttons[x][y].setText(Integer.toString(mineLand[x][y]));
-                    buttons[x][y].setBackground(Color.BLUE);
+                    buttons[x][y].setBackground(Color.LIGHT_GRAY);
                     break;
             }
         }
@@ -195,7 +183,6 @@ public class game extends JFrame {
     private int noOfMines = 0;
     private int[][] mineLand;
     private boolean[][] revealed;
-    
         
     }
 
@@ -217,7 +204,10 @@ class GameEngine implements ActionListener {
         }
         else if (eventSource instanceof JToggleButton) {
             JToggleButton clickedButton = (JToggleButton) eventSource;
-            parent.buttonClicked(clickedButton.getName());
+            String[] xy = clickedButton.getName().split(" ", 2);
+            int x = Integer.parseInt(xy[0]);
+            int y = Integer.parseInt(xy[1]);
+            parent.buttonClicked(x, y);
         }
     }
 }

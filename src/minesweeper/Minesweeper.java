@@ -16,7 +16,6 @@ public class Minesweeper {
     }
     
     public void running(int size) {
-        System.out.println("Good Going man! You're number " + size);
         newGame = new game(size);
         newGame.main(newGame, size);
     }
