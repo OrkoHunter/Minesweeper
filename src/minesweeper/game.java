@@ -8,6 +8,7 @@ import java.util.Random;
 public class game extends JFrame {
     
     public game(int size) {
+        noOfMines = size;
         this.setSize(size*30, size*30 + 50);
         this.setTitle("Minesweeper");
         setLocationRelativeTo(null);
@@ -19,21 +20,52 @@ public class game extends JFrame {
     private static void setMines(int size) {
         Random rand = new Random();
         
-        int noOfBombs = (size*3)/2;
-        
-        int[] xPoints = new int[noOfBombs];
-        for (int i = 0; i < noOfBombs; i++) {
-            xPoints[i] = rand.nextInt(noOfBombs + 1);
+        mineLand = new int[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                mineLand[i][j] = 0;
+            }
         }
         
-        int[] yPoints = new int[noOfBombs];
-        for (int i = 0; i < noOfBombs; i++) {
-            yPoints[i] = rand.nextInt(noOfBombs + 1);
+        int count = 0;
+        int xPoint = 0;
+        int yPoint = 0;
+        while(count<=noOfMines) {
+            xPoint = rand.nextInt(size);
+            yPoint = rand.nextInt(size);
+            if (mineLand[xPoint][yPoint]!=-1) {
+                mineLand[xPoint][yPoint]=-1;  // -1 represents bomb
+                count++;
+            }
         }
         
-        for (int i = 0; i < noOfBombs; i++) {
-            System.out.println(xPoints[i] + ", " + yPoints[i]);
+        // Fill boxes adjacent to mines
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (mineLand[i][j]==-1) {
+                    for (int k = -1; k <= 1 ; k++) {
+                        for (int l = -1; l <= 1; l++) {
+                            try {
+                                if (mineLand[i+k][j+l]!=-1) {
+                                    mineLand[i+k][j+l] += 1;
+                                }
+                            }
+                            catch (Exception e) {
+                                // Do nothing
+                            }
+                        }
+                    }
+                }
+            }
         }
+        
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                    System.out.print(mineLand[i][j] + "  ");
+            }
+            System.out.println("\n");
+        }
+
     }
     
     public static void main(int size) {
@@ -103,4 +135,7 @@ public class game extends JFrame {
     private static JLabel flagsLabel;
     private static JButton smileButton;
     private static JLabel timeLabel;
+
+    private static int noOfMines = 0;
+    private static int[][] mineLand;
 }
