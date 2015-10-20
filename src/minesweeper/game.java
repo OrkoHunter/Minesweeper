@@ -1,11 +1,11 @@
 package minesweeper;
 
-//import javax.swing.border.
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.util.Random;
 import java.awt.event.*;
+import javax.imageio.ImageIO;
 
 public class game extends JFrame {
     
@@ -15,8 +15,6 @@ public class game extends JFrame {
         this.setTitle("Minesweeper");
         setLocationRelativeTo(null);
         this.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        
-
     }
 
     private void setMines(int size) {
@@ -66,6 +64,19 @@ public class game extends JFrame {
 
         GameEngine gameEngine = new GameEngine(frame);
 
+        try {
+            smiley = ImageIO.read(getClass().getResource("images/Smiley.png"));
+            newSmiley = smiley.getScaledInstance( 30, 30,  java.awt.Image.SCALE_SMOOTH );
+            dead = ImageIO.read(getClass().getResource("images/dead.png"));
+            newDead = dead.getScaledInstance( 30, 30,  java.awt.Image.SCALE_SMOOTH );
+            flag = ImageIO.read(getClass().getResource("images/flag.png"));
+            newFlag = flag.getScaledInstance( 30, 30,  java.awt.Image.SCALE_SMOOTH );
+            mine = ImageIO.read(getClass().getResource("images/mine.png"));
+            newMine = mine.getScaledInstance( 30, 30,  java.awt.Image.SCALE_SMOOTH );
+        }
+        catch (Exception e){
+        }
+        
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
@@ -75,39 +86,45 @@ public class game extends JFrame {
         BoxLayout g1 = new BoxLayout(panel1, BoxLayout.X_AXIS);
         //FlowLayout g1 = new FlowLayout();
         panel1.setLayout(g1);
-        JLabel jLabel1 = new JLabel(" Flags = ");
-        flagsLabel = new JLabel("  ");
-        smileButton = new JButton();
+        //JLabel jLabel1 = new JLabel(" Flags = ");
+        //flagsLabel = new JLabel("  ");
+
+        smileButton = new JButton(new ImageIcon(newSmiley));
         smileButton.setPreferredSize(new Dimension(30, 30));
         smileButton.setMaximumSize(new Dimension(30, 30));
+        smiling = true;
+
         //smileButton.setMinimumSize(new Dimension(18, 18));
         smileButton.setBorderPainted(true);
         smileButton.setName("smileButton");
+        //smileButton.setOpaque(true);
+        //ImageIcon smiley = new ImageIcon("flag.png");
+        
+
         smileButton.addActionListener(gameEngine);
-        JLabel jLabel2 = new JLabel(" Time :");
-        timeLabel = new JLabel("....");
+        //JLabel jLabel2 = new JLabel(" Time :");
+        //timeLabel = new JLabel("....");
         // jLabel1.getWidth() == 39
         // flagsLabel.getWidth() == 14
         // smileButton.getWidth() == 30
         // jLabel2.getWidth()) == 37
         
-        panel1.add(jLabel1);
-        panel1.add(flagsLabel);
+        //panel1.add(jLabel1);
+        //panel1.add(flagsLabel);
         panel1.add(Box.createRigidArea(new Dimension((size-1)*15 - 53,50)));
         panel1.add(smileButton, BorderLayout.PAGE_START);
-        panel1.add(Box.createRigidArea(new Dimension((size-1)*15 - 65,50)));
-        panel1.add(jLabel2);
-        panel1.add(timeLabel);
-        
+        panel1.add(Box.createRigidArea(new Dimension((size-1)*15 - 85,50)));
+        //panel1.add(jLabel2);
+        //panel1.add(timeLabel);
         
         GridLayout g2 = new GridLayout(size, size);
         panel2.setLayout(g2);
 
-        buttons = new JToggleButton[size][size];
+        buttons = new JButton[size][size];
 
         for (int i=0; i<size; i++) {
             for (int j=0; j<size ; j++ ) {
-                buttons[i][j] = new JToggleButton();
+                buttons[i][j] = new JButton();
                 buttons[i][j].setPreferredSize(new Dimension(12, 12));
                 buttons[i][j].setBorder(new LineBorder(Color.BLACK));
                 buttons[i][j].setBorderPainted(true);
@@ -135,7 +152,13 @@ public class game extends JFrame {
     }
     
     public void changeSmile() {
-        
+        if (smiling) {
+            smiling=false;
+            smileButton.setIcon(new ImageIcon(newDead));
+        } else {
+            smiling=true;
+            smileButton.setIcon(new ImageIcon(newSmiley));
+        }
     }
     
     public void buttonClicked(int x, int y) {
@@ -144,14 +167,22 @@ public class game extends JFrame {
             
             switch (mineLand[x][y]) {
                 case -1:
-                    buttons[x][y].setText("X");
-                    buttons[x][y].setSelected(false);
+                    try {
+                        buttons[x][y].setIcon(new ImageIcon(newMine));
+                    } catch (Exception e) {
+                        buttons[x][y].setText("X");
+                    }
+
+                    
                     buttons[x][y].setBackground(Color.RED);
+                    try {
+                        smileButton.setIcon(new ImageIcon(newDead));
+                    } catch (Exception e) {
+                    }
                     JOptionPane.showMessageDialog(rootPane, "Game Over !");
                     System.exit(0);
                     break;
                 case 0:
-                    buttons[x][y].setSelected(false);
                     buttons[x][y].setBackground(Color.lightGray);
                     for (int i = -1; i <= 1; i++) {
                         for (int j = -1; j <= 1; j++) {
@@ -173,7 +204,7 @@ public class game extends JFrame {
         
     }
 
-    private JToggleButton[][] buttons;
+    private JButton[][] buttons;
     private JPanel panel1;
     private JPanel panel2;
     private JLabel flagsLabel;
@@ -183,7 +214,17 @@ public class game extends JFrame {
     private int noOfMines = 0;
     private int[][] mineLand;
     private boolean[][] revealed;
-        
+    
+    private Image smiley;
+    private Image newSmiley;
+    private Image flag;
+    private Image newFlag;
+    private Image mine;
+    private Image newMine;
+    private Image dead;
+    private Image newDead;
+    
+    private boolean smiling;
     }
 
 
@@ -198,16 +239,17 @@ class GameEngine implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object eventSource = e.getSource();
-        
-        if (eventSource instanceof JButton) {
+        JButton clickedButton = (JButton) eventSource;
+        String name = clickedButton.getName();
+        if (name.equals("smileButton")) {
             parent.changeSmile();
         }
-        else if (eventSource instanceof JToggleButton) {
-            JToggleButton clickedButton = (JToggleButton) eventSource;
+        else {
             String[] xy = clickedButton.getName().split(" ", 2);
             int x = Integer.parseInt(xy[0]);
             int y = Integer.parseInt(xy[1]);
             parent.buttonClicked(x, y);
+        //}
         }
     }
 }
