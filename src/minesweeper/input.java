@@ -77,8 +77,8 @@ class InputEngine implements ActionListener {
                     text.setText("");
                     break;
                 } else {
-                    parent.set(size);
                     parent.setVisible(false);
+                    parent.set(size);
                 }
                 break;
             }
