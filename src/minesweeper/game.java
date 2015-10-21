@@ -106,7 +106,7 @@ public class game extends JFrame {
 
         smileButton.addActionListener(gameEngine);
         JLabel jLabel2 = new JLabel(" Time :");
-        timeLabel = new JLabel("....");
+        timeLabel = new JLabel("0");
         // jLabel1.getWidth() == 39
         // flagsLabel.getWidth() == 14
         // smileButton.getWidth() == 30
@@ -154,6 +154,17 @@ public class game extends JFrame {
                 flagged[i][j] = false;
             }
         }
+        
+        timeThread timer = new timeThread(this);
+        timer.start();
+        
+    }
+    
+    public void timer() {
+        String[] time = this.timeLabel.getText().split(" ");
+        int time0 = Integer.parseInt(time[0]);
+        ++time0;
+        this.timeLabel.setText(Integer.toString(time0) + " s");
     }
     
     public void changeSmile() {
@@ -181,7 +192,7 @@ public class game extends JFrame {
                     flagged[x][y] = true;
                     int old = Integer.parseInt(this.flagsLabel.getText());
                     --old;
-                    this.flagsLabel.setText(""+old);                
+                    this.flagsLabel.setText(""+old);
                 }
             }
         }
@@ -329,4 +340,32 @@ class MyMouseListener implements MouseListener {
 
         }
 
+}
+
+class timeThread implements Runnable {
+    private Thread t;
+    private game newGame;
+    
+    timeThread(game newGame) {
+        this.newGame = newGame;
+    }
+    
+    public void run() {
+        while(true) {
+            try {
+                Thread.sleep(1000);
+                newGame.timer();
+            }
+            catch (InterruptedException e) {
+                System.exit(0);
+            }
+        }
+    }
+    
+    public void start() {
+        if (t==null) {
+            t = new Thread(this);
+            t.start();
+        }
+    }
 }
