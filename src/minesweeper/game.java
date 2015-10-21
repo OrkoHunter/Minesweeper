@@ -128,7 +128,6 @@ public class game extends JFrame {
                 buttons[i][j].setPreferredSize(new Dimension(12, 12));
                 buttons[i][j].setBorder(new LineBorder(Color.BLACK));
                 buttons[i][j].setBorderPainted(true);
-                buttons[i][j].setToolTipText("It's " + Integer.toString(i) + ", " + Integer.toString(j));
                 buttons[i][j].setName(i + " " + j);
                 buttons[i][j].addActionListener(gameEngine);
                 panel2.add(buttons[i][j]);
