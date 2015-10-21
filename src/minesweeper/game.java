@@ -90,6 +90,8 @@ public class game extends JFrame {
         //FlowLayout g1 = new FlowLayout();
         panel1.setLayout(g1);
         JLabel jLabel1 = new JLabel(" Flags = ");
+        jLabel1.setAlignmentX(Component.LEFT_ALIGNMENT);
+        jLabel1.setHorizontalAlignment(JLabel.LEFT);
         flagsLabel = new JLabel(""+this.noOfMines);
 
         smileButton = new JButton(new ImageIcon(newSmiley));
@@ -107,16 +109,18 @@ public class game extends JFrame {
         smileButton.addActionListener(gameEngine);
         JLabel jLabel2 = new JLabel(" Time :");
         timeLabel = new JLabel("0");
+        timeLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        timeLabel.setHorizontalAlignment(JLabel.RIGHT);
         // jLabel1.getWidth() == 39
         // flagsLabel.getWidth() == 14
         // smileButton.getWidth() == 30
         // jLabel2.getWidth()) == 37
-        
+
         panel1.add(jLabel1);
         panel1.add(flagsLabel);
-        //panel1.add(Box.createRigidArea(new Dimension((size-1)*15 - 53,50)));
+        panel1.add(Box.createRigidArea(new Dimension((size-1)*15 - 80,50)));
         panel1.add(smileButton, BorderLayout.PAGE_START);
-        //panel1.add(Box.createRigidArea(new Dimension((size-1)*15 - 85,50)));
+        panel1.add(Box.createRigidArea(new Dimension((size-1)*15 - 85,50)));
         panel1.add(jLabel2);
         panel1.add(timeLabel);
         
