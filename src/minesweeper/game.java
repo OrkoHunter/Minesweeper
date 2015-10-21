@@ -11,7 +11,7 @@ public class game extends JFrame {
     
     public game(int size, int toughness) {
         noOfMines = size*(1 + toughness/2);
-        this.setSize(size*30, size*30 + 50);
+        this.setSize(size*MAGIC_SIZE, size*MAGIC_SIZE + 50);
         this.setTitle("Minesweeper");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -85,13 +85,13 @@ public class game extends JFrame {
         // Images
         try {
             smiley = ImageIO.read(getClass().getResource("images/Smiley.png"));
-            newSmiley = smiley.getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH);
+            newSmiley = smiley.getScaledInstance(MAGIC_SIZE, MAGIC_SIZE, java.awt.Image.SCALE_SMOOTH);
 
             dead = ImageIO.read(getClass().getResource("images/dead.png"));
-            newDead = dead.getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH);
+            newDead = dead.getScaledInstance(MAGIC_SIZE, MAGIC_SIZE, java.awt.Image.SCALE_SMOOTH);
 
             flag = ImageIO.read(getClass().getResource("images/flag.png"));
-            newFlag = flag.getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH);
+            newFlag = flag.getScaledInstance(MAGIC_SIZE, MAGIC_SIZE, java.awt.Image.SCALE_SMOOTH);
 
             mine = ImageIO.read(getClass().getResource("images/mine.png"));
             newMine = mine.getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH);
@@ -111,8 +111,8 @@ public class game extends JFrame {
 
         smiling = true;
         smileButton = new JButton(new ImageIcon(newSmiley));
-        smileButton.setPreferredSize(new Dimension(30, 30));
-        smileButton.setMaximumSize(new Dimension(30, 30));
+        smileButton.setPreferredSize(new Dimension(MAGIC_SIZE, MAGIC_SIZE));
+        smileButton.setMaximumSize(new Dimension(MAGIC_SIZE, MAGIC_SIZE));
         smileButton.setBorderPainted(true);
         smileButton.setName("smileButton");
         smileButton.addActionListener(gameEngine);
@@ -205,6 +205,12 @@ public class game extends JFrame {
         }
     }
 
+    private boolean gameWon() {
+        // noOfRevealed + noOfMines must be equal to the total no. of boxes
+        return (this.noOfRevealed) ==
+                        (Math.pow(this.mineLand.length, 2) - this.noOfMines);
+    }
+
     // When a block is clicked
     public void buttonClicked(int x, int y) {
         if(!revealed[x][y] && !flagged[x][y]) {
@@ -234,8 +240,7 @@ public class game extends JFrame {
                     buttons[x][y].setBackground(Color.lightGray);
                     ++this.noOfRevealed;
 
-                    if ((this.noOfRevealed) ==
-                        (Math.pow(this.mineLand.length, 2) - this.noOfMines)) {
+                    if (gameWon()) {
                         JOptionPane.showMessageDialog(rootPane,
                             "Congratulations! You've Won");
 
@@ -260,7 +265,7 @@ public class game extends JFrame {
                     buttons[x][y].setText(Integer.toString(mineLand[x][y]));
                     buttons[x][y].setBackground(Color.LIGHT_GRAY);
                     ++this.noOfRevealed;
-                    if ((this.noOfRevealed)==(Math.pow(this.mineLand.length, 2) - this.noOfMines)) {
+                    if (gameWon()) {
                         JOptionPane.showMessageDialog(rootPane, "You Won !");
 
                         System.exit(0);
@@ -295,6 +300,8 @@ public class game extends JFrame {
     private Image newDead;
     
     private boolean smiling;  // Is he? Or is he not?
+
+    public static final int MAGIC_SIZE = 30;
 
 }
 
