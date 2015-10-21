@@ -9,8 +9,8 @@ import javax.imageio.ImageIO;
 
 public class game extends JFrame {
     
-    public game(int size) {
-        noOfMines = (size*3)/2;
+    public game(int size, int toughness) {
+        noOfMines = size*(1 + toughness/2);
         this.setSize(size*30, size*30 + 50);
         this.setTitle("Minesweeper");
         setLocationRelativeTo(null);
