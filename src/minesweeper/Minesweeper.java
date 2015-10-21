@@ -19,17 +19,15 @@ public class Minesweeper {
                 null,
                 options,
                 options[1]);
-            running(size, toughness);
+
+        newGame = new game(size, toughness);
+        newGame.main(newGame, size);
+
     }
     
     public static void main(String[] args) {
         minesweeper = new Minesweeper();
         minesweeper.start(minesweeper);
-    }
-    
-    public void running(int size, int toughness) {
-        newGame = new game(size, toughness);
-        newGame.main(newGame, size);
     }
     
     private static Minesweeper minesweeper;
