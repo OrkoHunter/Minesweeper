@@ -89,8 +89,8 @@ public class game extends JFrame {
         BoxLayout g1 = new BoxLayout(panel1, BoxLayout.X_AXIS);
         //FlowLayout g1 = new FlowLayout();
         panel1.setLayout(g1);
-        //JLabel jLabel1 = new JLabel(" Flags = ");
-        //flagsLabel = new JLabel("  ");
+        JLabel jLabel1 = new JLabel(" Flags = ");
+        flagsLabel = new JLabel(""+this.noOfMines);
 
         smileButton = new JButton(new ImageIcon(newSmiley));
         smileButton.setPreferredSize(new Dimension(30, 30));
@@ -105,20 +105,20 @@ public class game extends JFrame {
         
 
         smileButton.addActionListener(gameEngine);
-        //JLabel jLabel2 = new JLabel(" Time :");
-        //timeLabel = new JLabel("....");
+        JLabel jLabel2 = new JLabel(" Time :");
+        timeLabel = new JLabel("....");
         // jLabel1.getWidth() == 39
         // flagsLabel.getWidth() == 14
         // smileButton.getWidth() == 30
         // jLabel2.getWidth()) == 37
         
-        //panel1.add(jLabel1);
-        //panel1.add(flagsLabel);
-        panel1.add(Box.createRigidArea(new Dimension((size-1)*15 - 53,50)));
+        panel1.add(jLabel1);
+        panel1.add(flagsLabel);
+        //panel1.add(Box.createRigidArea(new Dimension((size-1)*15 - 53,50)));
         panel1.add(smileButton, BorderLayout.PAGE_START);
-        panel1.add(Box.createRigidArea(new Dimension((size-1)*15 - 85,50)));
-        //panel1.add(jLabel2);
-        //panel1.add(timeLabel);
+        //panel1.add(Box.createRigidArea(new Dimension((size-1)*15 - 85,50)));
+        panel1.add(jLabel2);
+        panel1.add(timeLabel);
         
         GridLayout g2 = new GridLayout(size, size);
         panel2.setLayout(g2);
@@ -171,10 +171,18 @@ public class game extends JFrame {
             if (flagged[x][y]) {
                 buttons[x][y].setIcon(null);
                 flagged[x][y] = false;
+                int old = Integer.parseInt(this.flagsLabel.getText());
+                ++old;
+                this.flagsLabel.setText(""+old);
             }
             else {
-                buttons[x][y].setIcon(new ImageIcon(newFlag));
-                flagged[x][y] = true;
+                if (Integer.parseInt(this.flagsLabel.getText())>0) {
+                    buttons[x][y].setIcon(new ImageIcon(newFlag));
+                    flagged[x][y] = true;
+                    int old = Integer.parseInt(this.flagsLabel.getText());
+                    --old;
+                    this.flagsLabel.setText(""+old);                
+                }
             }
         }
     }
