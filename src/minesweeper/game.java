@@ -30,7 +30,7 @@ public class game extends JFrame {
         int count = 0;
         int xPoint;
         int yPoint;
-        while(count<=noOfMines) {
+        while(count<noOfMines) {
             xPoint = rand.nextInt(size);
             yPoint = rand.nextInt(size);
             if (mineLand[xPoint][yPoint]!=-1) {
@@ -76,6 +76,8 @@ public class game extends JFrame {
         }
         catch (Exception e){
         }
+        
+        this.noOfRevealed = 0;
         
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
@@ -183,10 +185,16 @@ public class game extends JFrame {
                     break;
                 case 0:
                     buttons[x][y].setBackground(Color.lightGray);
+                    ++this.noOfRevealed;                                
+                    if ((this.noOfRevealed)==(Math.pow(this.mineLand.length, 2) - this.noOfMines)) {
+                                    JOptionPane.showMessageDialog(rootPane, "You Won !");
+                                    System.exit(0);
+                    }
                     for (int i = -1; i <= 1; i++) {
                         for (int j = -1; j <= 1; j++) {
                             try {
-                                buttonClicked(x + i, y + j);  // Recurse around
+                                buttonClicked(x + i, y + j);  // Recurse around                                
+
                             }
                             catch (Exception e) {
                                 // Do nothing
@@ -197,6 +205,11 @@ public class game extends JFrame {
                 default:
                     buttons[x][y].setText(Integer.toString(mineLand[x][y]));
                     buttons[x][y].setBackground(Color.LIGHT_GRAY);
+                    ++this.noOfRevealed;
+                    if ((this.noOfRevealed)==(Math.pow(this.mineLand.length, 2) - this.noOfMines)) {
+                        JOptionPane.showMessageDialog(rootPane, "You Won !");
+                        System.exit(0);
+                    }
                     break;
             }
         }
@@ -213,6 +226,7 @@ public class game extends JFrame {
     private int noOfMines = 0;
     private int[][] mineLand;
     private boolean[][] revealed;
+    private int noOfRevealed;
     
     private Image smiley;
     private Image newSmiley;
