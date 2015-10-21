@@ -9,7 +9,7 @@ public class Minesweeper {
         Input.main(Input);
     }
     
-    public void tough(int size) {
+    public void proceed(int size) {
         int toughness = 1;
         Object[] options = {"Easy", "Moderate", "Hard"};
         toughness = JOptionPane.showOptionDialog(newGame,
@@ -36,3 +36,4 @@ public class Minesweeper {
     private static game newGame;
     private static input Input;
 }
+

@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class input extends JFrame {
+
     public input(Minesweeper minesweeper) {
         this.iMinesweeper = minesweeper;
         this.setSize(400, 100);
@@ -14,13 +15,12 @@ public class input extends JFrame {
         this.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
     }
     
-    // Setter
+    // Setter and Getter
     public void set(int n) {
         size = n;
-        iMinesweeper.tough(size);
+        iMinesweeper.proceed(size);
     }
-    
-    // Getter
+
     public int get() {
         return size;
     }
@@ -29,6 +29,7 @@ public class input extends JFrame {
         inputEngine = new InputEngine(Input);
 
         size=0;
+
         GridLayout g = new GridLayout(2,1);
         panel = new JPanel();
         
@@ -43,10 +44,10 @@ public class input extends JFrame {
         this.setVisible(true);
     }
     
-    final private Minesweeper iMinesweeper;
-    private InputEngine inputEngine;
+    final private Minesweeper iMinesweeper;  // A reference to the original game
+    private InputEngine inputEngine;  // The ActionListener
 
-    private int size;
+    private int size;  // size given
     private JPanel panel;
     private JLabel label;
     private JTextField text;
@@ -91,6 +92,5 @@ class InputEngine implements ActionListener {
             }
         }
     }
-
-    
 }
+
