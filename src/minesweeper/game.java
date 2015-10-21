@@ -63,6 +63,7 @@ public class game extends JFrame {
     public void main(game frame, int size) {
 
         GameEngine gameEngine = new GameEngine(frame);
+        MyMouseListener myMouseListener = new MyMouseListener(frame);
 
         try {
             smiley = ImageIO.read(getClass().getResource("images/Smiley.png"));
@@ -132,6 +133,7 @@ public class game extends JFrame {
                 buttons[i][j].setBorderPainted(true);
                 buttons[i][j].setName(i + " " + j);
                 buttons[i][j].addActionListener(gameEngine);
+                buttons[i][j].addMouseListener(myMouseListener);
                 panel2.add(buttons[i][j]);
             }
         }
@@ -145,9 +147,11 @@ public class game extends JFrame {
         setMines(size);
 
         revealed = new boolean[size][size];
+        flagged = new boolean[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 revealed[i][j] = false;
+                flagged[i][j] = false;
             }
         }
     }
@@ -162,11 +166,25 @@ public class game extends JFrame {
         }
     }
     
-    public void buttonClicked(int x, int y) {
+    public void buttonRightClicked(int x, int y) {
         if(!revealed[x][y]) {
+            if (flagged[x][y]) {
+                buttons[x][y].setIcon(null);
+                flagged[x][y] = false;
+            }
+            else {
+                buttons[x][y].setIcon(new ImageIcon(newFlag));
+                flagged[x][y] = true;
+            }
+        }
+    }
+    
+    public void buttonClicked(int x, int y) {
+        if(!revealed[x][y] && !flagged[x][y]) {
             revealed[x][y] = true;
             
             switch (mineLand[x][y]) {
+                
                 case -1:
                     try {
                         buttons[x][y].setIcon(new ImageIcon(newMine));
@@ -227,6 +245,7 @@ public class game extends JFrame {
     private int[][] mineLand;
     private boolean[][] revealed;
     private int noOfRevealed;
+    private boolean[][] flagged;
     
     private Image smiley;
     private Image newSmiley;
@@ -262,7 +281,44 @@ class GameEngine implements ActionListener {
             int x = Integer.parseInt(xy[0]);
             int y = Integer.parseInt(xy[1]);
             parent.buttonClicked(x, y);
-        //}
+
         }
     }
+}
+
+class MyMouseListener implements MouseListener {
+    game parent;
+    
+    MyMouseListener(game parent) {
+        this.parent = parent;
+    }
+
+    public void mouseExited(MouseEvent arg0){
+        
+    }
+    
+    public void mouseEntered(MouseEvent arg0){
+        
+    }
+    
+    public void mousePressed(MouseEvent arg0){
+        
+    }
+    
+    public void mouseClicked(MouseEvent arg0){
+        
+    }
+    @Override
+    public void mouseReleased(MouseEvent arg0) {
+        if(SwingUtilities.isRightMouseButton(arg0)){
+            Object eventSource = arg0.getSource();
+            JButton clickedButton = (JButton) eventSource;
+            String[] xy = clickedButton.getName().split(" ", 2);
+            int x = Integer.parseInt(xy[0]);
+            int y = Integer.parseInt(xy[1]);
+            parent.buttonRightClicked(x, y);
+        }
+
+        }
+
 }
