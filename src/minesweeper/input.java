@@ -30,7 +30,6 @@ public class input extends JFrame {
 
         size=0;
 
-        GridLayout g = new GridLayout(2,1);
         panel = new JPanel();
         
         label = new JLabel("Enter grid size : ");
